@@ -4,6 +4,10 @@ A walker simulated with CPG control and wrap around control of SAC in event of p
 ***
 
 ##Requirements
- -trep python module
-   # Dependencies
+###trep python module
+   -Install instructions: http://murpheylab.github.io/trep/install/
+###sactrep python module
+   -follow instruction found in setup.py
+   
+
 
