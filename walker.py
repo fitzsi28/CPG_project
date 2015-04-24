@@ -1,5 +1,5 @@
 #Trep and SAC simulation of walker
-#Authors: Katie Fitzsimons, Maddy ??
+#Authors: Katie Fitzsimons, Mahdieh
 
 import numpy as np
 import trep
