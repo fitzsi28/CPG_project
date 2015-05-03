@@ -5,14 +5,15 @@ import numpy as np
 import trep
 from trep import tx,ty,tz,rx,ry,rz
 import sactrep
-import matplotlib.pyplot as plt
+import pylab
 from math import sin
 
-tf=10
+tf=1.0
 dt = 0.01
+tc = 0.0
 
 g = 0
-B=0.002 #damping
+B=0.00 #damping
 
 MH = 0.05 #kg
 MW = 0.05 #kg
@@ -21,7 +22,7 @@ d = 0.01 #m
 dw = 0.1 #m
 LEFTWHISK = "Left whisker"
 RIGHTWHISK = "Right whisker"
-A = np.pi/3
+A = np.pi/3.0
 
 q0= np.array([0,0,0]) #
 dq0 = np.array([0,0,0])
@@ -42,7 +43,7 @@ system.import_frames(frames)
 trep.potentials.Gravity(system,(0,0,-g))
 trep.forces.Damping(system,B)
 
-print "configs",system.nu
+print "configs",system.configs
 
 def proj_func(x):
     x[0] = np.fmod(x[0]+np.pi, 2.0*np.pi)
@@ -60,9 +61,9 @@ def proj_func(x):
 
 def whiskpath(t):
     q = np.array([0,0,0])
-    q[0] = 0
-    q[1] = A*sin(t)
-    q[2] = -A*sin(t)
+    q[0] = (np.pi/2.0)*sin(t)
+    q[1] = A*sin(16.0*np.pi*t)
+    q[2] = -A*sin(16.0*np.pi*t)
     return q
 
 
@@ -71,22 +72,27 @@ mvi.initialize_from_configs(0, q0, dt, q0)
 
 # set initial conditions:
 system.q = q0
-system.dq = dq0
+system.dq = whiskpath(np.pi/2)
 T = [mvi.t1]
 Q = [system.q]
 
 
 while mvi.t1 < tf:
-    mvi.step(mvi.t2+dt, k2=whiskpath(mvi.t2+dt))
+    tc = tc+dt
+    mvi.step(mvi.t2+dt, k2=whiskpath(tc))
+    #system.q = whiskpath(mvi.t1)
     T.append(mvi.t1)
     qtemp = system.q
     proj_func(qtemp)
     Q.append(qtemp)
     if np.abs(mvi.t1%1)<0.1:
-        print "time = ",mvi.q1
+        print "time = ",mvi.t1
                         
-plt.plot(T,Q) 
-plt.show()
+pylab.plot(T,Q) 
+pylab.title("Trep whisking")
+pylab.ylabel("q(radians)")
+pylab.legend(["Neck","Left Whisker","Right Whisker"])
+pylab.show()
 # Visualize the system in action
 trep.visual.visualize_3d([ trep.visual.VisualItem3D(system, T, Q) ])
             
