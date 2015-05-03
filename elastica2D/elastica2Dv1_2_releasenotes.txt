@@ -1,0 +1,18 @@
+ELASTICA2D v1.2 RELEASE NOTES
+
+Lucie Huet
+Nov. 7, 2012
+
+elastica2D.m is available here:
+http://nxr.northwestern.edu/digital-rat
+
+Elastica2D v1.2 new features and fixed bugs:
+
+1.  Correct curvature at the base for elastic boundary condition.
+2.	Remove requirement that contact point in Point mode is in positive x-direction.
+3.	E and I along the arc length of the vibrissa are outputs.
+4.	The final contact point is an output.
+5.	Added functionality to make all nodes equidistant along the arc length.
+6.	Final moment for each node along the vibrissa is given as output.
+7.	Change in curvature and total curvature at every node along the vibrissa are given as output.
+8.	"Global curvature" is an output.
