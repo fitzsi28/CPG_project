@@ -6,10 +6,10 @@ import trep
 from trep import tx,ty,tz,rx,ry,rz
 import sactrep
 import pylab
-from math import sin
+import math
 
-tf=1.0
-dt = 0.01
+tf=2.0
+dt = 0.001
 tc = 0.0
 
 g = 0
@@ -22,7 +22,8 @@ d = 0.01 #m
 dw = 0.1 #m
 LEFTWHISK = "Left whisker"
 RIGHTWHISK = "Right whisker"
-A = np.pi/3.0
+Aw = math.pi/3
+An = math.pi/3 #(math.pi/2.0)
 
 q0= np.array([0,0,0]) #
 dq0 = np.array([0,0,0])
@@ -60,10 +61,10 @@ def proj_func(x):
     x[2] = x[2] - np.pi
 
 def whiskpath(t):
-    q = np.array([0,0,0])
-    q[0] = (np.pi/2.0)*sin(t)
-    q[1] = A*sin(16.0*np.pi*t)
-    q[2] = -A*sin(16.0*np.pi*t)
+    q = np.array([0.,0.,0.])
+    q[0] = An*math.sin(t)
+    q[1] = Aw*math.sin(8.0*math.pi*t)
+    q[2] = -Aw*math.sin(8.0*math.pi*t)
     return q
 
 
@@ -82,9 +83,9 @@ while mvi.t1 < tf:
     mvi.step(mvi.t2+dt, k2=whiskpath(tc))
     #system.q = whiskpath(mvi.t1)
     T.append(mvi.t1)
-    qtemp = system.q
-    proj_func(qtemp)
-    Q.append(qtemp)
+    #qtemp = system.q
+    #proj_func(qtemp)
+    Q.append(system.q)
     if np.abs(mvi.t1%1)<0.1:
         print "time = ",mvi.t1
                         
