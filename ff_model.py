@@ -1,39 +1,7 @@
 import numpy as np
 from scipy import integrate
 import matplotlib.pyplot as plt
-
-# def deriv(y, t):
-# 	yprime = np.array([3.5*y[0]])
-# 	return yprime
-
-# start = 0
-# end = 1
-# numsteps = 1000
-# time = np.linspace(start, end, numsteps)
-# y0 = np.array([10])
-
-# y = integrate.odeint(deriv, y0, time)
-
-# plt.plot(time, y[:])
-# plt.show()
-
-
-# def deriv(y, t):
-# 	uprime = y[1]
-# 	wprime = -y[0]
-# 	yprime = np.array([uprime, wprime])
-# 	return yprime
-
-# start = 0
-# end = 10
-# numsteps = 1000
-# time = np.linspace(start, end, numsteps)
-# y0=np.array([0.0005, 0.2])
-
-# y = integrate.odeint(deriv, y0, time)
-
-# plt.plot(time, y[:,0])
-# plt.show()
+import pylab
 
 def limb(Y, t):
 	d = 0.1 #damping ratio
@@ -75,13 +43,16 @@ def main():
 	print(y2)
 	print(y3)
 
-	plt.plot(y1[:,1],y1[:,0])
-	plt.plot(y2[:,1],y2[:,0])
-	plt.plot(y3[:,1],y3[:,0])
+	pylab.plot(y1[:,1],y1[:,0])
+	# plt.plot(y2[:,1],y2[:,0])
+	# plt.plot(y3[:,1],y3[:,0])
+	pylab.grid('on')
+	pylab.title(" Phase Plane Limit Cycle ")
+	pylab.xlabel(" theta ")
+	pylab.ylabel(" theta dot ")
+	pylab.show()
 
-	plt.show()
-
-
+	# fig.savefig('phase_plane_limit_cycle.png')
 
 if __name__ == '__main__':
 	main()
