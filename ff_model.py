@@ -7,12 +7,25 @@ from sympy.plotting import plot_parametric
 def limb(Y, t):
 	d = 0.1 #damping ratio
 	u = 0 	#externally applied torque
+	tau = 1.2
+	k = 1
+	o = 0.510
+	e = 0.731
+
+	if t == (2*k-1)*tau:
+		u = o*(1+e)
+		print "u: ", u
+
+	if t == 2*k*tau: 
+		u = -o*(1+e)
+		print "u1: ",u
 
 	return [Y[1], u-2*d*Y[1]-Y[0]]
 
 
 def main():
 
+	
 	# First swing
 	ts = 0 	#start time
 	te = 1.2 	# end time (half-period)
@@ -21,8 +34,8 @@ def main():
 	a = 0.3 #
 	o = 0.510 # speed
 	e = 0.731 # speed retained
-	y0 = np.array([-a, -o*e])
-	y1 = integrate.odeint(limb, y0, time1)
+	# y0 = np.array([-a, -o*e])
+	# y1 = integrate.odeint(limb, y0, time1)
 
 
 	# Second swing
@@ -40,24 +53,31 @@ def main():
 	y0 = np.array([a, -o])
 	y3 = integrate.odeint(limb, y0, time3)
 
-	print(y1)
+	# print(y1)
 	print(y2)
 	print(y3)
 
 
-	subplot(311)
-	plot(y1[:,1],y1[:,0])
-	#pylab.plot_parametric((y1[:,1],y1[:,0], (t, 0, 1.2))
-	axis('equal')
-	grid('on')
+	# subplot(411)
+	# plot(y1[:,0],y1[:,1])
+	# #pylab.plot_parametric((y1[:,1],y1[:,0], (t, 0, 1.2))
+	# axis('equal')
+	# grid('on')
 	
-	subplot(312)
-	plot(y2[:,1],y2[:,0])
-	axis('equal')
-	grid('on')
+	# subplot(412)
+	# plot(y2[:,0], y2[:,1])
+	# axis('equal')
+	# grid('on')
 	
-	subplot(313)
-	plot(y3[:,1],y3[:,0])
+	# subplot(413)
+	# plot(y3[:,0],y3[:,1])
+	# axis('equal')
+	# grid('on')
+
+
+	# subplot(414)
+	plot(y2[:,0], y2[:,1])
+	plot(y3[:,0],y3[:,1])
 	axis('equal')
 	grid('on')
 
