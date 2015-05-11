@@ -1,13 +1,14 @@
 import numpy as np
 from scipy import integrate
 import matplotlib.pyplot as plt
-import pylab
+from pylab import * 
+from sympy.plotting import plot_parametric
 
 def limb(Y, t):
 	d = 0.1 #damping ratio
 	u = 0 	#externally applied torque
 
-	return [Y[1], -2*d*Y[1]-Y[0]]
+	return [Y[1], u-2*d*Y[1]-Y[0]]
 
 
 def main():
@@ -43,14 +44,27 @@ def main():
 	print(y2)
 	print(y3)
 
-	pylab.plot(y1[:,1],y1[:,0])
-	# plt.plot(y2[:,1],y2[:,0])
-	# plt.plot(y3[:,1],y3[:,0])
-	pylab.grid('on')
-	pylab.title(" Phase Plane Limit Cycle ")
-	pylab.xlabel(" theta ")
-	pylab.ylabel(" theta dot ")
-	pylab.show()
+
+	subplot(311)
+	plot(y1[:,1],y1[:,0])
+	#pylab.plot_parametric((y1[:,1],y1[:,0], (t, 0, 1.2))
+	axis('equal')
+	grid('on')
+	
+	subplot(312)
+	plot(y2[:,1],y2[:,0])
+	axis('equal')
+	grid('on')
+	
+	subplot(313)
+	plot(y3[:,1],y3[:,0])
+	axis('equal')
+	grid('on')
+
+	title(" Phase Plane Limit Cycle ")
+	xlabel(" theta ")
+	ylabel(" theta dot ")
+	show()
 
 	# fig.savefig('phase_plane_limit_cycle.png')
 
