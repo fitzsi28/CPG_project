@@ -4,7 +4,7 @@
 import numpy as np
 import trep
 from trep import tx,ty,tz,rx,ry,rz
-import sactrep
+# import sactrep
 import pylab
 import math
 

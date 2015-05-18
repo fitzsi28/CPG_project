@@ -5,7 +5,7 @@ import numpy as np
 import trep
 from trep import tx,ty,tz,rx,ry,rz
 import pylab
-import sactrep
+# import sactrep
 
 tf=10.0
 dt = 0.01
