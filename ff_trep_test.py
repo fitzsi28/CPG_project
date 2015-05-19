@@ -14,11 +14,8 @@ import trep.discopt
 ts = 0.0 	# Start time
 tf = 10.0 	# Final time
 dt = 0.01 	# Timestep
-<<<<<<< HEAD
-tc = 0.0 	# Current time
-=======
+
 tc = 0.0 	# t_calc for SAC
->>>>>>> c2156ba6d4624e5886ed638ec990b70a11e89f9e
 
 g = 9.81 	# Acceleration due to gravity
 B = 0.01  	# Damping
