@@ -4,9 +4,10 @@ import matplotlib.pyplot as plt
 from pylab import * 
 from sympy.plotting import plot_parametric
 
+# Numercial Differential Equation Sovler 
 def limb(Y, t):
 	d = 0.1 #damping ratio
-	u = 0.01 	#externally applied torque
+	u = 0.05 	#externally applied torque
 	tau = 1.2
 	o = 0.510
 	e = 0.731
@@ -17,15 +18,14 @@ def limb(Y, t):
 def main():
 
 	tau = 1.2 	# half-period
-	k = 1 		# 
 
 	ts = 0 		# start time
 	te = tau	# end time
-	Tsim = 5*tau	# Total simulation time
+	Tsim = 8*tau	# Total simulation time
 
-	numsteps = 1000 	#
+	numsteps = 1000 	# timesteps to solve DE 
 
-	a = 0.3 	#
+	a = 0.3 	# angle
 	o = 0.510 	# speed
 	e = 0.731 	# speed retained
 
