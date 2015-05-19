@@ -11,29 +11,22 @@ from pylab import *
 
 tf=10.0 	# Final time
 dt = 0.01 	# Timestep
-tc = 0.0 	# ???
+tc = 0.0 	# t_calc for SAC
 
 g = 9.81 	# acceleration due to gravity
 B=0.002  	#damping
 
-MH = 0.5 	# Mass of Hip (kg)
-MUL =0.2 	# Mass of upper leg (kg)
-MLL = 0.1 	# Mass of lower leg (kg)
-UL = 0.25 	# Length of upper leg (m)
-LL = 0.25 	# Length of lower leg (m)
+M = 0.5 	# Mass of Hip (kg)
+L = 0.25 	# Length of upper leg (m)
 
 HIP = "hip joint"
-ULEG = "UpperLeg"
-LLEG = "LowerLeg"
+LEG = "Leg"
 
 system = trep.System() 			# Initialize system
 
 frames = [#1
-    ty('yb', name ="body", mass = MH),[#2
-        rx('theta1', name = HIP,),[#3
-            tz(-UL ,name = ULEG, mass = MUL),[
-                rx('theta2', name = 'knee'),[
-                    tz(-LL, name = LLEG, mass = MLL)]]]]]
+    rx('theta1', name = HIP,),[#2
+        tz(-L ,name = LEG, mass = M)]]
 
 system.import_frames(frames) 	# Add frames
 
