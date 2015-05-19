@@ -20,8 +20,8 @@ def main():
 	k = 1 		# 
 
 	ts = 0 		# start time
-	te = n*tau	# end time
-	Tsim = 3.6 	# Total simulation time
+	te = tau	# end time
+	Tsim = tau 	# Total simulation time
 
 	numsteps = 1000 	#
 
