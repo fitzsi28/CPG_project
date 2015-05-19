@@ -6,17 +6,10 @@ from sympy.plotting import plot_parametric
 
 def limb(Y, t):
 	d = 0.1 #damping ratio
-	u = 0 	#externally applied torque
+	u = 0.01 	#externally applied torque
 	tau = 1.2
-	k = 1
 	o = 0.510
 	e = 0.731
-
-	if t == (2*k-1)*tau:
-		u = o*(1+e)
-
-	if t == 2*k*tau: 
-		u = -o*(1+e)
 
 	return [Y[1], u-2*d*Y[1]-Y[0]]
 
@@ -24,11 +17,11 @@ def limb(Y, t):
 def main():
 
 	tau = 1.2 	# half-period
-	n = 1 		# 
+	k = 1 		# 
 
 	ts = 0 		# start time
-	te = n*tau	# end time
-	T = 3.6 	# total sim time
+	te = tau	# end time
+	Tsim = 5*tau	# Total simulation time
 
 	numsteps = 1000 	#
 
@@ -39,73 +32,64 @@ def main():
 	theta = []			# array of joint angles
 	thetaDot = []		  #array of joint velocities
 
-	# while te <= T:  
-	# 	if ts == (n-1)*tau: # first half-peirod
-	# 		# First swing
-	# 		# te = n*tau	# end time (half-period)
+	# Initial Conditions: 
+	angle = a
+	velocity = -o
 
-	# 		time1 = np.linspace(ts, te, numsteps)
-	# 		# y0 = np.array([-a, -o*e])
-	# 		# y1 = integrate.odeint(limb, y0, time1)
-	# 		# theta.append(y1[:,1])
-	# 		# thetaDot.append(y1[:,0])
+	while te <= Tsim:
 
-	# 		time2 = np.linspace(ts, te, numsteps)
-	# 		y0 = np.array([-a, o])
-	# 		y2 = integrate.odeint(limb, y0, time2)
-	# 		theta = theta + y2[:,1]
-	# 		thetaDot = thetaDot + y2[:, 0]
+		# First Half-Cycle: 
+		time = np.linspace(ts, te, numsteps)
+		y0 = np.array([angle, velocity])
+		y = integrate.odeint(limb, y0, time)
+		theta = np.append(theta, y[:,0])
+		thetaDot = np.append(thetaDot, y[:, 1])	
 
-	# 		ts = te 
-	# 		n = n+1
-	# 		te = n*tau
+		# Imulse: 
+		impulseAng= len(theta)-1
+		theta = np.append(theta, theta[impulseAng])
+		nextVel = len(thetaDot)-1
+		impulseVel = thetaDot[nextVel] + o*(1+e)
+		thetaDot = np.append(thetaDot, impulseVel)
 
-	# 	if ts == n*tau:
+		# Setting up conditions for next half-cycle
+		ts = ts + tau
+		te = te + tau	
 
-	# 		# time2 = np.linspace(ts, te, numsteps)
-	# 		# y0 = np.array([-a, o])
-	# 		# y2 = integrate.odeint(limb, y0, time2)
-	# 		# theta.append(y2[:,1])
-	# 		# thetaDot.append(y2[:,0])
+		lenAng = len(theta)-1
+		lenVel = len(thetaDot)-1
 
-	# 		time3 = np.linspace(ts, te, numsteps)
-	# 		y0 = np.array([a, -o])
-	# 		y3 = integrate.odeint(limb, y0, time3)
-	# 		theta = theta + y3[:,1]
-	# 		thetaDot = thetaDot + y3[:, 0]
-	# 		ts = te 
-	# 		n = n+1
-	# 		te = n*tau
+		angle = theta[lenAng]
+		velocity = thetaDot[lenVel]
 
+		# Second Half-Cycle: 
+		time = np.linspace(ts, te, numsteps)
+		y0 = np.array([angle, velocity])
+		y = integrate.odeint(limb, y0, time)
+		theta = np.append(theta, y[:,0])
+		thetaDot = np.append(thetaDot, y[:, 1])	
 
-	# Second swing
-	ts = 1.2
-	te = 2.4
-	time2 = np.linspace(ts, te, numsteps)
-	y0 = np.array([a, -o])
-	y2 = integrate.odeint(limb, y0, time2)
+		# Impulse: 
+		impulseAng= len(theta)-1
+		theta = np.append(theta, theta[impulseAng])
+		nextVel = len(thetaDot)-1
+		impulseVel = thetaDot[nextVel] - o*(1+e)
+		thetaDot = np.append(thetaDot, impulseVel)
 
+		# Setting up conditions for next half-cycle
+		ts = ts + tau
+		te = te + tau	
 
-	# Back
-	ts = 2.4
-	te = 3.6
-	time3 = np.linspace(ts, te, numsteps)
-	y0 = np.array([-a, o])
-	y3 = integrate.odeint(limb, y0, time3)
+		lenAng = len(theta)-1
+		lenVel = len(thetaDot)-1
 
-	# print(y1)
-	print("y2=", y2[:,0])
-	print("y3=", y3)
-
-	theta = np.append(y2[:,0], y3[:,0])
-	thetaDot = np.append(y2[:,1], y3[:,1])
+		angle = theta[lenAng]
+		velocity = thetaDot[lenVel]
 
 
-	# plot(y2[:,0], y2[:,1])
-	# plot(y3[:,0],y3[:,1])
-	# print "theta", theta
-	# plot(thetaDot, theta)
-	plot(thetaDot, theta)
+# Plot of results: 
+	plot(theta, thetaDot)
+
 	axis('equal')
 	grid('on')
 
@@ -118,7 +102,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
-
-
-
