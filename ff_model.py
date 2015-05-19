@@ -1,8 +1,9 @@
+# Implementing the feedforward cotrol system for rythmic movements as described in Kuo et. al 2002
+# Authors: Mahdieh Nejati and Katie Fitzsimons
+
 import numpy as np
 from scipy import integrate
-import matplotlib.pyplot as plt
 from pylab import * 
-from sympy.plotting import plot_parametric
 
 # Numercial Differential Equation Sovler 
 def limb(Y, t):
