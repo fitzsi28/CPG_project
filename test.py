@@ -17,7 +17,7 @@ q0 = 0.3 # Initial angle of pendulum
 dq0 = -0.510 # Initial velocity of pendulum
 t0 = 0.0 # Initial time
 tf = 5.0 # Final time
-dt = 0.1 # Timestep
+dt = 0.01 # Timestep
 B = 0.1 # Damping
 g = -9.8
 
@@ -36,18 +36,20 @@ trep.forces.ConfigForce(system, 'theta', 'theta-torque') # Add input (externally
 ## Create and initialize the variational integrator
 mvi = trep.MidpointVI(system)
 mvi.initialize_from_configs(t0, np.array([q0]), t0+dt, np.array([q0]))
+# mvi.initialize_from_state ()
+# generalized momentum, need to calculate from the legandgre transform
 
 ## Simulate system forward in time
 T = [mvi.t1] # List to hold time values
 Q = [mvi.q1] # List to hold configuration values
-dQ = [mvi.q2_dq1]
+dQ = [system.dq] # List to hold velocities 
+
 while mvi.t1 < tf:
+    #torque = F(mvi.t2+dt)+SAC <--plug this into mvi where [0.0] is
     mvi.step(mvi.t2+dt, [0.0]) # Step the system forward by one time step
     T.append(mvi.t1)
     Q.append(mvi.q1)
-    dQ.append(mvi.q2)
-    print "Q: ", mvi.q1
-    print "dQ: ", mvi.q2
+    dQ.append(system.dq)
 
 ## Phase Plane Limit Cycel
 plot(Q, dQ)
