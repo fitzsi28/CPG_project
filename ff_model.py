@@ -22,7 +22,7 @@ def main():
 
 	ts = 0 		# start time
 	te = tau	# end time
-	Tsim = 8*tau	# Total simulation time
+	Tsim = 10*tau	# Total simulation time
 
 	numsteps = 1000 	# timesteps to solve DE 
 
