@@ -50,10 +50,10 @@ while mvi.t1 < tf:
     print "dQ: ", mvi.q2
 
 ## Phase Plane Limit Cycel
-# plot(Q, dQ)
-# ylabel(" dtheta ")
-# xlabel(" theta ")
-# show()
+plot(Q, dQ)
+ylabel(" dtheta ")
+xlabel(" theta ")
+show()
 
 
 ## Visualize the system in action
