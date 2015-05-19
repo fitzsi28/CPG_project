@@ -93,8 +93,8 @@ def main():
 
 	axis('equal')
 	grid('on')
-
-	title(" Phase Plane Limit Cycle ")
+	# title(" Phase Plane Limit Cycle ")
+	title(" feedforward Disturbance Response ")
 	xlabel(" theta ")
 	ylabel(" theta dot ")
 	show()
