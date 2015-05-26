@@ -6,7 +6,8 @@ import trep
 from trep import tx,ty,tz,rx,ry,rz
 from pylab import *
 from numpy import dot
-import trep.discopt
+#import trep.discopt
+import sactrep
 
 
 ## System parameters: 
@@ -65,6 +66,38 @@ def FF(t,prev):
        tor = 0
     return[tor, prev]
 
+#############
+# SAC STUFF #
+#############
+
+def proj_func(x):
+    x[1] = np.fmod(x[1]+np.pi, 2.0*np.pi)
+    if(x[1] < 0):
+        x[1] = x[1]+2.0*np.pi
+    x[1] = x[1] - np.pi
+
+def xdes_func(t, x, xdes):#need to figure this one out
+    xdes[0] = -1*np.cos(t)
+    
+sacsys = sactrep.Sac(system)
+
+sacsys.T = 1.0
+sacsys.lam = -20
+sacsys.maxdt = 0.2
+sacsys.ts = dt
+sacsys.usat = [[100, -100]]
+sacsys.calc_tm = dt
+sacsys.u2search = False
+sacsys.Q = np.diag([10,10]) # th,thd
+sacsys.P = 0*np.diag([0,0])
+sacsys.R = 0.3*np.identity(1)
+
+sacsys.set_proj_func(proj_func)
+sacsys.set_xdes_func(xdes_func)
+
+sacsys.init()
+
+
 ## Simulate system forward in time
 T = [mvi.t1] # List to hold time values
 Q = [system.q] # List to hold configuration values
@@ -74,11 +107,11 @@ U = [0.0]
 while mvi.t1 < tf:
     torque = np.zeros(system.nu)
     control_val = FF(mvi.t2+dt,prev)
+    sacsys.calc_u() # use sacsys.controls and sacsys.t_app to access the calculated controls
     torque[0] = control_val[0] #+SAC <--plug this into mvi where [0.0] is
     prev = control_val[1]
     #mvi.step(mvi.t2+dt, [0.0]) # no control
     mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
-       
     T.append(mvi.t1)
     Q.append(mvi.q1)
     dQ.append(system.dq)
