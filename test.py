@@ -8,6 +8,7 @@ from pylab import *
 from numpy import dot
 #import trep.discopt
 import sactrep
+import csv
 
 
 ## System parameters: 
@@ -16,7 +17,7 @@ m = 12 # Mass of pendulum
 l = 1.0 # Length of pendulum
 
 t0 = 0.0 # Initial time
-tf = 1.0 # Final time
+tf = 0.79 # Final time
 dt = 0.01 # Timestep
 B = 8.4 # Damping coefficient
 g = 9.81 #potential due to gravity and springs
@@ -24,8 +25,8 @@ xref = np.array([0,0,0,0,np.pi,np.pi,np.pi,np.pi,np.pi,np.pi])
 i = 0
 #From KUO
 tau = 0.398 #time constant from KUO
-q0 = 0.0 #0.3 # Initial angle of pendulum
-dq0 = 0.0 # -0.510*np.sqrt(g/l) # Initial velocity of pendulum
+q0 = 0.3 # Initial angle of pendulum
+dq0 = -0.510*np.sqrt(g/l) # Initial velocity of pendulum
 #print 1.2/np.sqrt(g/l)
 u = 3195.0#impulse force
 
@@ -112,17 +113,18 @@ U = [0.0]
 while mvi.t1 < tf:
     torque = np.zeros(system.nu)
     control_val = FF(mvi.t2+dt,prev)
-    sacsys.calc_u() # use sacsys.controls and sacsys.t_app to access the calculated controls
+    #sacsys.calc_u() # use sacsys.controls and sacsys.t_app to access the calculated controls
     torque[0] = control_val[0] #+SAC <--plug this into mvi where [0.0] is
     prev = control_val[1]
-    mvi.step(mvi.t2+dt, u1=sacsys.controls) # no control
-    #mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
-    print sacsys.controls
+    #mvi.step(mvi.t2+dt, u1=sacsys.controls) # no control
+    mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
+    #print sacsys.controls
     T.append(mvi.t1)
     Q.append(mvi.q1)
     dQ.append(system.dq)
     U.append(torque)
 
+np.savetxt("x_ref.csv", Q, delimiter=",")
 
 # Plot results
 ax1 = subplot(211,autoscale_on = False,xlim =[-0.4,0.4],ylim =[-1.75,1.75])
