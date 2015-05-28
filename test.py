@@ -18,7 +18,7 @@ m = 12 # Mass of pendulum
 l = 1.0 # Length of pendulum
 
 t0 = 0.0 # Initial time
-tf = 0.79 # Final time
+tf = 3 # Final time
 dt = 0.01 # Timestep
 B = 8.4 # Damping coefficient
 g = 9.81 #potential due to gravity and springs
@@ -125,8 +125,8 @@ while mvi.t1 < tf:
     #sacsys.calc_u() # use sacsys.controls and sacsys.t_app to access the calculated controls
     torque[0] = control_val[0] #+SAC <--plug this into mvi where [0.0] is
     prev = control_val[1]
-    #mvi.step(mvi.t2+dt, u1=sacsys.controls) # no control
-    mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
+    mvi.step(mvi.t2+dt, u1=sacsys.controls) # no control
+    #mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
     #print sacsys.controls
     T.append(mvi.t1)
     Q.append(mvi.q1)
