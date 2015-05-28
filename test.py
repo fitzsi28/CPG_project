@@ -16,16 +16,16 @@ m = 12 # Mass of pendulum
 l = 1.0 # Length of pendulum
 
 t0 = 0.0 # Initial time
-tf = 10.0 # Final time
+tf = 1.0 # Final time
 dt = 0.01 # Timestep
 B = 8.4 # Damping coefficient
 g = 9.81 #potential due to gravity and springs
-
-
+xref = np.array([0,0,0,0,np.pi,np.pi,np.pi,np.pi,np.pi,np.pi])
+i = 0
 #From KUO
 tau = 0.398 #time constant from KUO
-q0 = 0.3 # Initial angle of pendulum
-dq0 = -0.510*np.sqrt(g/l) # Initial velocity of pendulum
+q0 = 0.0 #0.3 # Initial angle of pendulum
+dq0 = 0.0 # -0.510*np.sqrt(g/l) # Initial velocity of pendulum
 #print 1.2/np.sqrt(g/l)
 u = 3195.0#impulse force
 
@@ -52,6 +52,7 @@ mvi.initialize_from_state(t0,np.array([q0]),np.array([m*l*dq0]))
 prev = 0
 #feed-forward force function
 def FF(t,prev):
+    #global prev
     time = t-prev
     if(time>(tau-0.005) and time<(tau+0.005)):
        tor=u
@@ -71,13 +72,17 @@ def FF(t,prev):
 #############
 
 def proj_func(x):
-    x[1] = np.fmod(x[1]+np.pi, 2.0*np.pi)
-    if(x[1] < 0):
-        x[1] = x[1]+2.0*np.pi
-    x[1] = x[1] - np.pi
+    x[0] = np.fmod(x[0]+np.pi, 2.0*np.pi)
+    if(x[0] < 0):
+        x[0] = x[0]+2.0*np.pi
+    x[0] = x[0] - np.pi
 
 def xdes_func(t, x, xdes):#need to figure this one out
-    xdes[0] = -1*np.cos(t)
+    global i
+    xdes[0] = xref[i]
+    i+=1
+    if i > (len(xref)-1):
+       i = 0
     
 sacsys = sactrep.Sac(system)
 
@@ -110,8 +115,9 @@ while mvi.t1 < tf:
     sacsys.calc_u() # use sacsys.controls and sacsys.t_app to access the calculated controls
     torque[0] = control_val[0] #+SAC <--plug this into mvi where [0.0] is
     prev = control_val[1]
-    #mvi.step(mvi.t2+dt, [0.0]) # no control
-    mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
+    mvi.step(mvi.t2+dt, u1=sacsys.controls) # no control
+    #mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
+    print sacsys.controls
     T.append(mvi.t1)
     Q.append(mvi.q1)
     dQ.append(system.dq)
