@@ -9,6 +9,7 @@ from numpy import dot
 #import trep.discopt
 import sactrep
 import csv
+import sys
 
 
 ## System parameters: 
@@ -21,7 +22,7 @@ tf = 0.79 # Final time
 dt = 0.01 # Timestep
 B = 8.4 # Damping coefficient
 g = 9.81 #potential due to gravity and springs
-xref = np.array([0,0,0,0,np.pi,np.pi,np.pi,np.pi,np.pi,np.pi])
+#xref = np.array([0,0,0,0,np.pi,np.pi,np.pi,np.pi,np.pi,np.pi])
 i = 0
 #From KUO
 tau = 0.398 #time constant from KUO
@@ -29,6 +30,14 @@ q0 = 0.3 # Initial angle of pendulum
 dq0 = -0.510*np.sqrt(g/l) # Initial velocity of pendulum
 #print 1.2/np.sqrt(g/l)
 u = 3195.0#impulse force
+
+# Importing reference 
+xref = []
+with open('x_ref.csv', 'rb') as f:
+    reader = csv.reader(f)
+    for row in reader:
+        xref.append(float(row[0]))
+print xref
 
 
 system = trep.System() # Initialize system
