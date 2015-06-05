@@ -10,6 +10,7 @@ from numpy import dot
 import sactrep
 import csv
 import sys
+from scipy import signal
 
 
 ## System parameters: 
@@ -37,7 +38,7 @@ with open('x_ref.csv', 'rb') as f:
     reader = csv.reader(f)
     for row in reader:
         xref.append(float(row[0]))
-print xref
+# print xref
 
 
 system = trep.System() # Initialize system
@@ -88,17 +89,24 @@ def proj_func(x):
     x[0] = x[0] - np.pi
 
 def xdes_func(t, x, xdes):#need to figure this one out
-    global i
-    xdes[0] = xref[i]
-    i+=1
-    if i > (len(xref)-1):
-       i = 0
-    
+    # global i
+    # xdes[0] = xref[i]
+    # xdes[]
+    # i+=1
+    # if i > (len(xref)-1):
+    #    i = 0
+    A = -0.252084
+    omega = -7.87212
+    phi = 4.64412
+    period = -0.798157
+    # xdes[1] = A * np.sin(omega*t + phi) #Sin wave
+    xdes[0] = (2*A/np.pi)*np.arcsin(np.sin((2*np.pi/period)*t)) # Triangle wave
+
 sacsys = sactrep.Sac(system)
 
-sacsys.T = 1.0
-sacsys.lam = -20
-sacsys.maxdt = 0.2
+sacsys.T = 0.1
+sacsys.lam = -5
+sacsys.maxdt = 0.1
 sacsys.ts = dt
 sacsys.usat = [[100, -100]]
 sacsys.calc_tm = dt
@@ -122,18 +130,19 @@ U = [0.0]
 while mvi.t1 < tf:
     torque = np.zeros(system.nu)
     control_val = FF(mvi.t2+dt,prev)
-    #sacsys.calc_u() # use sacsys.controls and sacsys.t_app to access the calculated controls
+    # sacsys.calc_u() # use sacsys.controls and sacsys.t_app to access the calculated controls
     torque[0] = control_val[0] #+SAC <--plug this into mvi where [0.0] is
     prev = control_val[1]
-    mvi.step(mvi.t2+dt, u1=sacsys.controls) # no control
-    #mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
+    sacsys.step()
+    # mvi.step(mvi.t2+dt, u1=sacsys.controls) # no control
+    # mvi.step(mvi.t2+dt, u1 = torque) # Step the system forward by one time step
     #print sacsys.controls
     T.append(mvi.t1)
     Q.append(mvi.q1)
     dQ.append(system.dq)
     U.append(torque)
 
-np.savetxt("x_ref.csv", Q, delimiter=",")
+# np.savetxt("x_ref.csv", Q, delimiter=",")
 
 # Plot results
 ax1 = subplot(211,autoscale_on = False,xlim =[-0.4,0.4],ylim =[-1.75,1.75])
